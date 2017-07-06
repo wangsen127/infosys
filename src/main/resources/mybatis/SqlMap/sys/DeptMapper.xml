@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间的名称与 dao接口的全限定名称保持一致 -->
+<mapper namespace="com.infosys.sys.dao.DeptDao">
+
+	<!-- 标签的id 与 dao的方法名称 一致 -->
+	<insert id="insertDept" parameterType="com.infosys.sys.pojo.Dept"
+		useGeneratedKeys="true" keyProperty="deptid">
+		insert into
+		t_sys_dept(deptcode,dpetname,manager,parent,deptlevel)
+		values(#{deptcode},#{dpetname},#{manager},#{dept.deptid},#{deptlevel})
+	</insert>
+	<update id="updateDept" parameterType="com.infosys.sys.pojo.Dept">
+		update t_sys_dept set
+		deptcode=#{deptcode},dpetname=#{dpetname},manager=#{manager},parent=#{dept.deptid},deptlevel=#{deptlevel}
+		where deptid=#{deptid}
+	</update>
+	<update id="deleteDept" parameterType="integer">
+		update t_sys_dept set delflag=0 where deptid in
+		<foreach collection="array" open="(" close=")" separator=","
+			item="id">
+			#{id}
+		</foreach>
+	</update>
+	<select id="getDept" parameterType="integer" resultType="com.infosys.sys.pojo.Dept">
+		select
+		deptid,deptcode,dpetname,manager,parent,deptlevel
+		from t_sys_dept
+		a,t_sys_dept
+		where
+		delflag=1 and deptid=#{deptid}
+	</select>
+	<select id="queryDept" resultMap="deptMap">
+		select
+			a.deptid,a.deptcode,a.dpetname,a.manager,a.parent,a.deptlevel,
+			b.deptid 'parentdeptid',b.deptcode 'parentdeptcode',
+			b.dpetname 'parentdpetname',b.deptlevel 'parentdeptlevel'
+		from
+			t_sys_dept a left join t_sys_dept b on(a.parent=b.deptid)
+		where
+			a.delflag=1
+	</select>
+	<resultMap type="com.infosys.sys.pojo.Dept" id="deptMap">
+		<id column="deptid" property="deptid" />
+		<result column="deptcode" property="deptcode" />
+		<result column="dpetname" property="dpetname" />
+		<result column="manager" property="manager" />
+		<result column="deptlevel" property="deptlevel" />
+		<association property="parent" javaType="com.infosys.sys.pojo.Dept">
+			<id column="parentdeptid" property="deptid" />
+			<result column="parentdeptcode" property="deptcode" />
+			<result column="parentdpetname" property="dpetname" />
+			<result column="parentdeptlevel" property="deptlevel" />
+		</association>
+	</resultMap>
+</mapper>

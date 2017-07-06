@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<!-- 这里需要填写你映射文件所有在路径  建议直接拷贝 -->
+	<mappers>
+		<mapper resource="mybatis/sqlMap/UserMapper.xml"/>
+		<mapper resource="mybatis/sqlMap/FileUploadMapper.xml"/>
+		<mapper resource="mybatis/sqlMap/DeptMapper.xml"/>
+		<mapper resource="mybatis/sqlMap/EmpMapper.xml"/>
+	</mappers>
+	
+</configuration>

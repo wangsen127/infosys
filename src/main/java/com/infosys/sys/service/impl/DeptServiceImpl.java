@@ -1,12 +1,14 @@
 package com.infosys.sys.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.infosys.sys.dao.DeptDao;
 import com.infosys.sys.pojo.Dept;
+import com.infosys.sys.pojo.TreeNode;
 import com.infosys.sys.service.DeptService;
 
 /**
@@ -51,4 +53,22 @@ public class DeptServiceImpl implements DeptService{
 		return list;
 	}
 
+	@Override
+	public List<TreeNode> quertDeptForTree(Integer parent) throws Exception {
+		List<TreeNode> list = deptDao.quertDeptForTree(parent);
+		
+		return list;
+	}
+	
+	public void getChildren(List<TreeNode> list) throws Exception {
+		for (TreeNode treeNode : list) {
+			List<TreeNode> sublist = deptDao.quertDeptForTree(treeNode.getId());
+			if(sublist!=null && sublist.size()>0){
+				treeNode.setChildren(sublist);
+				getChildren(sublist);
+			}else{
+				
+			}
+		}
+	}
 }

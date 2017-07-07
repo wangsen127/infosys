@@ -27,21 +27,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   	<script type="text/javascript">
   		//var ids = [];
   		$(function(){
+  			//测试树
+  			$("#treeData").tree({    
+			    url:"quertDeptForTree.do"
+			});  
+
   			//表格
   			$("#data").datagrid({ 
   				//title: "部门管理",
         		//iconCls: "icon-save",
         		url: "queryDept.do",
-        		queryParams:{
+        		//queryParams:{
         			//deptno : 1
-        		},
+        		//},
         		fitColumns:true, //自动展开/收缩列的大小
         		striped:true,//斑马线效果
         		method:"post",
         		idField:"deptid", //指明哪一个字段是标识字段
-                pagination: true,//显示分页 
 		        rownumbers: true, //显示一个行号列
 		        singleSelect: false,//只允许选择一行
+                pagination: true,//显示分页 
 		        pageSize:10,//分页大小  
 		        pageList:[10,20,30,40,50],//每页的个数  
 		        sortOrder:"asc",//排序顺序
@@ -55,17 +60,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		        	//hidden隐藏列
 		        	//sortable允许列使用排序
 		        	//checkbox显示复选框
-                    {checkbox:true},
-                    {field: "deptid", hidden:true},
-                    {field: "deptcode", title: "部门代码"},
-                    {field: "dpetname", title: "部门名称"},
-                    {field: "manager", title: "部门经理"},
-                    {field: "parent", title: "父部门", formatter: function(value,row,index){
-                    	if(row.parent)
-                    		return row.parent.dpetname;
+                    {field:"cb", checkbox:true},
+                    {field:"deptid", hidden:true},
+                    {field:"deptcode", title: "部门代码", width:15},
+                    {field:"dpetname", title: "部门名称", width:20},
+                    {field:"manager", title: "部门经理", width:10},
+                    {field:"parent", title: "父部门", width:20, formatter: function(value,row,index){
+                    	if(value)
+                    		return value.dpetname;
                     	return "";
                     }},
-                    {field: "deptlevel", title: "部门级别", formatter: function(value){
+                    {field:"deptlevel", title: "部门级别", width:10, formatter: function(value){
                     	if(value == 1) return "总部";
                     	else if(value == 2) return "地区";
                     	else if(value == 3) return "部门";
@@ -90,8 +95,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			//设置表单元素为必填
 			$(".check").validatebox({    
 			    required: true
-			});   
+			}); 
   			
+  			//设置下拉列表
+  			$("#parent").combogrid({    
+  			    //panelWidth:250,    
+  			    //value:"", 
+  			    fitColumns:true,
+  			    idField:"deptid",    
+  			    textField:"dpetname",    
+  			    url:"quertDeptForTree.do",    
+  			    columns:[[    
+  			        //{field: "deptid", hidden:true},
+                    //{field: "deptcode", title: "部门代码"},
+                    {field: "dpetname", title: "部门名称",width:20},
+                    //{field: "manager", title: "部门经理"},
+                    {field: "deptlevel", title: "部门级别",width:20, formatter: function(value){
+                    	if(value == 1) return "总部";
+                    	else if(value == 2) return "地区";
+                    	else if(value == 3) return "部门";
+                    	else return "";
+                    }}  
+  			    ]]    
+  			});  
+
   			//保存窗口
   			$("#save-win").window({
   				title:"保存窗口",
@@ -133,6 +160,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			
   			*/
   		});
+  		
   		function save(){
   			$("#save-win").window("open");
   			$("#save-form").form("reset");
@@ -215,6 +243,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div data-options="region:'center'">
 		<div id="data"></div>
 	</div>
+	<div data-options="region:'west',split:true" title="部门" style="width:220px;"">
+		<ul id="treeData"></ul>
+	</div> 
 	<div id="save-win">
 		<div style="padding: 20px 0px 0px 40px">
 			<form id="save-form" method="post">
@@ -233,7 +264,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                </tr>
 	                <tr>
 	                    <td>管理部门：</td>
-	                    <td><input class="check" name="parent" style="width: 150px;"/></td>
+	                    <td><input class="check" id="parent" name="parent" style="width: 150px;"/></td>
 	                </tr>
 	                <tr>
 	                    <td>部门级别：</td>
@@ -247,7 +278,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             <a href="javascript:void(0)" onclick="closeWindow()" id="cancel-btn1">取消</a>
         </div>
 	</div>
-	<!-- 
+	
+	<!--
 	<div id="edit-win">
 		<div style="padding: 20px 0px 0px 40px">
 			<form id="edit-form" method="post">

@@ -3,6 +3,7 @@ package com.infosys.sys.dao;
 import java.util.List;
 
 import com.infosys.sys.pojo.Dept;
+import com.infosys.sys.pojo.TreeNode;
 
 /**
  * 
@@ -20,5 +21,6 @@ public interface DeptDao {
 	public void deleteDept(Integer[] ids) throws Exception;
 	public Dept getDept(Integer deptid) throws Exception;
 	public List<Dept> queryDept() throws Exception;
+	public List<TreeNode> quertDeptForTree(Integer parent) throws Exception;
 	
 }

@@ -1,6 +1,7 @@
 package com.infosys.sys.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.infosys.sys.pojo.Dept;
+import com.infosys.sys.pojo.TreeNode;
 import com.infosys.sys.service.DeptService;
 
 /**
@@ -56,4 +58,9 @@ public class DeptController {
 		return list;
 	}
 	
+	@RequestMapping("/quertDeptForTree.do")
+	public @ResponseBody List<TreeNode> quertDeptForTree(Integer parent) throws Exception{
+		List<TreeNode> list = deptService.quertDeptForTree(parent);
+		return list;
+	}
 }

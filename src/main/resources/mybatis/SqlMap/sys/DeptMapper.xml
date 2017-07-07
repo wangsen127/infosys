@@ -54,4 +54,18 @@
 			<result column="parentdeptlevel" property="deptlevel" />
 		</association>
 	</resultMap>
+	<select id="quertDeptForTree" parameterType="integer" resultType="com.infosys.sys.pojo.TreeNode">
+		select
+			deptid id,dpetname text
+		from
+			t_sys_dept
+		where
+			delflag=1
+		<if test="parent!=null">
+			and parent=#{parent}
+		</if>
+		<if test="parent==null">
+			and parent is null
+		</if>
+	</select>
 </mapper>

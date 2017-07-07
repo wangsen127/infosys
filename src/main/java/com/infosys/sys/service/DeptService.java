@@ -1,8 +1,10 @@
 package com.infosys.sys.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.infosys.sys.pojo.Dept;
+import com.infosys.sys.pojo.TreeNode;
 /**
  * 
  * <p>Title: DeptService</p>
@@ -18,5 +20,6 @@ public interface DeptService {
 	public void delDept(Integer[] ids) throws Exception;
 	public Dept getDept(Integer deptid) throws Exception;
 	public List<Dept> queryDept() throws Exception;
+	public List<TreeNode> quertDeptForTree(Integer parent) throws Exception;
 	
 }

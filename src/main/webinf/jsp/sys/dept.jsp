@@ -19,23 +19,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
-	<link href="easyui/themes/default/easyui.css" rel="stylesheet" type="text/css" />
-    <link href="easyui/themes/icon.css" rel="stylesheet" type="text/css" />
-    <script src="easyui/jquery.min.js" type="text/javascript"></script>
-    <script src="easyui/jquery.easyui.min.js" type="text/javascript"></script>
-    <script src="easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+	<link href="easyui1.5/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+    <link href="easyui1.5/themes/icon.css" rel="stylesheet" type="text/css" />
+    <script src="easyui1.5/jquery.min.js" type="text/javascript"></script>
+    <script src="easyui1.5/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="easyui1.5/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
   	<script type="text/javascript">
   		//var ids = [];
   		$(function(){
   			//表格
   			$("#data").datagrid({ 
-  				title: "部门管理",
-        		iconCls: "icon-save",
+  				//title: "部门管理",
+        		//iconCls: "icon-save",
         		url: "queryDept.do",
         		queryParams:{
         			//deptno : 1
         		},
-        		//fitColumns:true, //自动展开/收缩列的大小
+        		fitColumns:true, //自动展开/收缩列的大小
         		striped:true,//斑马线效果
         		method:"post",
         		idField:"deptid", //指明哪一个字段是标识字段
@@ -87,19 +87,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		        }]
   			});
   			
-  			/*
-  			//设置下拉选不可修改
-			$(".easyui-combobox").combobox({    
-				editable:false 
-			});
+  			//设置表单元素为必填
 			$(".check").validatebox({    
 			    required: true
 			});   
+  			
   			//保存窗口
   			$("#save-win").window({
   				title:"保存窗口",
   				width:350,    
-			    height:150,
+			    height:242,
 			    collapsible:false,
 			    minimizable:false,
 			    maximizable:false,
@@ -114,7 +111,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    iconCls: "icon-cancel"
 			}); 
 			
-			
+			/*
 			//修改窗口
 			$("#edit-win").window({
   				title:"修改窗口",
@@ -218,13 +215,29 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div data-options="region:'center'">
 		<div id="data"></div>
 	</div>
-	<!-- <div id="save-win">
+	<div id="save-win">
 		<div style="padding: 20px 0px 0px 40px">
 			<form id="save-form" method="post">
 	            <table>
 	                <tr>
-	                    <td>地区名称：</td>
-	                    <td><input class="check" name="aname" style="width: 150px;"/></td>
+	                    <td>部门代码：</td>
+	                    <td><input class="check" name="deptcode" style="width: 150px;"/></td>
+	                </tr>
+	                <tr>
+	                    <td>部门名称：</td>
+	                    <td><input class="check" name="dpetname" style="width: 150px;"/></td>
+	                </tr>
+	                <tr>
+	                    <td>部门经理：</td>
+	                    <td><input class="check" name="manager" style="width: 150px;"/></td>
+	                </tr>
+	                <tr>
+	                    <td>管理部门：</td>
+	                    <td><input class="check" name="parent" style="width: 150px;"/></td>
+	                </tr>
+	                <tr>
+	                    <td>部门级别：</td>
+	                    <td><input class="check" name="deptlevel" style="width: 150px;"/></td>
 	                </tr>
 	            </table>
 			</form>
@@ -234,6 +247,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             <a href="javascript:void(0)" onclick="closeWindow()" id="cancel-btn1">取消</a>
         </div>
 	</div>
+	<!-- 
 	<div id="edit-win">
 		<div style="padding: 20px 0px 0px 40px">
 			<form id="edit-form" method="post">

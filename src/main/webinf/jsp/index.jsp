@@ -30,10 +30,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			text-align:right;
 		}
 	</style>
-	<link href="easyui/themes/default/easyui.css" rel="stylesheet" type="text/css" />
-    <link href="easyui/themes/icon.css" rel="stylesheet" type="text/css" />
-    <script src="easyui/jquery.min.js" type="text/javascript"></script>
-    <script src="easyui/jquery.easyui.min.js" type="text/javascript"></script>
+	<link href="easyui1.5/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+    <link href="easyui1.5/themes/icon.css" rel="stylesheet" type="text/css" />
+    <script src="easyui1.5/jquery.min.js" type="text/javascript"></script>
+    <script src="easyui1.5/jquery.easyui.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		$(function(){
 			$(".easyui-accordion li a").bind("click",function(){
@@ -82,7 +82,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div data-options="region:'south'" style="height:50px;"></div>
 	<div data-options="region:'west',split:true,iconCls:'icon-redo'" title="导航菜单" style="width:180px;">
 		<div class="easyui-accordion" data-options="fit:true,border:false">
-			<div title="学生信息" data-options="selected:true,iconCls:'icon-edit'" style="padding:10px">
+			<div title="学生信息" data-options="iconCls:'icon-edit'" style="padding:10px">
 				<ul class="easyui-tree">
                     <li>
                         <a title="班级管理" name="stu/stuclass.jsp">班级管理</a>
@@ -102,7 +102,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     </li>
                 </ul>
 			</div>
-			<div title="系统设置" style="padding:10px;" data-options="iconCls:'icon-edit'">
+			<div title="系统设置" style="padding:10px;" data-options="selected:true,iconCls:'icon-edit'">
                 <ul class="easyui-tree">
                     <li>
                         <a title="用户管理" name="user/user.jsp">用户管理</a>

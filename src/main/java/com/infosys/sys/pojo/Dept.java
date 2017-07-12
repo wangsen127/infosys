@@ -11,7 +11,7 @@ package com.infosys.sys.pojo;
 public class Dept {
 	private Integer deptid;
 	private String deptcode;
-	private String dpetname;
+	private String deptname;
 	private Integer manager;
 	private Dept parent;
 	private Integer deptlevel;
@@ -27,11 +27,11 @@ public class Dept {
 	public void setDeptcode(String deptcode) {
 		this.deptcode = deptcode;
 	}
-	public String getDpetname() {
-		return dpetname;
+	public String getDeptname() {
+		return deptname;
 	}
-	public void setDpetname(String dpetname) {
-		this.dpetname = dpetname;
+	public void setDeptname(String deptname) {
+		this.deptname = deptname;
 	}
 	public Integer getManager() {
 		return manager;

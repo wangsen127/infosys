@@ -6,16 +6,9 @@ import java.util.List;
 public class TreeNode {
 	private Integer id;// 节点编号
 	private String text;// 节点文本
+	private Integer parent;
 	private String state = "open";// 节点状态
 	private List<TreeNode> children = new ArrayList<TreeNode>();// 子节点集合
-
-	public TreeNode() {
-	}
-
-	public TreeNode(Integer id, String text) {
-		this.id = id;
-		this.text = text;
-	}
 
 	public Integer getId() {
 		return id;
@@ -31,6 +24,14 @@ public class TreeNode {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+	
+	public Integer getParent() {
+		return parent;
+	}
+
+	public void setParent(Integer parent) {
+		this.parent = parent;
 	}
 
 	public String getState() {
@@ -48,4 +49,5 @@ public class TreeNode {
 	public void setChildren(List<TreeNode> children) {
 		this.children = children;
 	}
+
 }

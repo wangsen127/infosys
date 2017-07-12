@@ -29,7 +29,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		$(function(){
   			//测试树
   			$("#treeData").tree({    
-			    url:"quertDeptForTree.do"
+			    url:"deptTree.do"
 			});  
 
   			//表格
@@ -63,11 +63,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     {field:"cb", checkbox:true},
                     {field:"deptid", hidden:true},
                     {field:"deptcode", title: "部门代码", width:15},
-                    {field:"dpetname", title: "部门名称", width:20},
+                    {field:"deptname", title: "部门名称", width:20},
                     {field:"manager", title: "部门经理", width:10},
                     {field:"parent", title: "父部门", width:20, formatter: function(value,row,index){
                     	if(value)
-                    		return value.dpetname;
+                    		return value.deptname;
                     	return "";
                     }},
                     {field:"deptlevel", title: "部门级别", width:10, formatter: function(value){
@@ -97,88 +97,65 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    required: true
 			}); 
   			
-  			//设置下拉列表
-  			$("#parent").combogrid({    
-  			    //panelWidth:250,    
-  			    //value:"", 
-  			    fitColumns:true,
-  			    idField:"deptid",    
-  			    textField:"dpetname",    
-  			    url:"quertDeptForTree.do",    
-  			    columns:[[    
-  			        //{field: "deptid", hidden:true},
-                    //{field: "deptcode", title: "部门代码"},
-                    {field: "dpetname", title: "部门名称",width:20},
-                    //{field: "manager", title: "部门经理"},
-                    {field: "deptlevel", title: "部门级别",width:20, formatter: function(value){
-                    	if(value == 1) return "总部";
-                    	else if(value == 2) return "地区";
-                    	else if(value == 3) return "部门";
-                    	else return "";
-                    }}  
-  			    ]]    
-  			});  
+  			//设置部门下拉树
+  			$("#parent").combotree({    
+  			    url:"deptTree.do" 
+  			});
+  			
+  			//设置部门级别下拉选
+  			$("#deptlevel").combobox({    
+  				valueField:"id",    
+  			    textField:"text",
+  			    url:"js/deptlevel.json"
+  			}); 
 
   			//保存窗口
-  			$("#save-win").window({
-  				title:"保存窗口",
+  			$("#dept-win").window({
   				width:350,    
-			    height:242,
+			    height:248,
 			    collapsible:false,
 			    minimizable:false,
-			    maximizable:false,
-			    resizable:false,
-			    modal:true,
 			    closed:true
   			});
   			$("#save-btn").linkbutton({    
 			    iconCls: "icon-save"
 			});  
-			$("#cancel-btn1").linkbutton({    
+			$("#cancel-btn").linkbutton({    
 			    iconCls: "icon-cancel"
 			}); 
-			
-			/*
-			//修改窗口
-			$("#edit-win").window({
-  				title:"修改窗口",
-  				width:350,    
-			    height:150,
-			    collapsible:false,
-			    minimizable:false,
-			    maximizable:false,
-			    resizable:false,    
-			    modal:true,
-			    closed:true
-  			});
-			$("#edit-btn").linkbutton({    
-			    iconCls: "icon-save" 
-			});  
-			$("#cancel-btn2").linkbutton({    
-			    iconCls: "icon-cancel" 
-			}); 
-			
-  			*/
   		});
   		
+  		
   		function save(){
-  			$("#save-win").window("open");
-  			$("#save-form").form("reset");
+  			$("#dept-win").window("open");
+  			$("#dept-win").window("setTitle","新增部门");
+  			$("#dept-form").form("reset");
   		}
-  		function saveData(){
-  			$("#save-form").form("submit",{
-				url : "user/saveArea.do",
+		function confirm(){
+			var url = "";
+			var str = "";
+			if($("#deptid").val()){
+				url = "editDept.do";
+				str = "修改";
+			}else{
+				url = "saveDept.do";
+				str = "新增";
+			}
+			$("#dept-form").form("submit",{
+				url : url,
 				onSubmit: function(){    
 			    	return $(this).form("validate");        
 			    },    
 			    success:function(data){
-			        if(data){
-			        	$("#save-win").window("close");
+			        if(data=="success"){
+			        	$("#dept-win").window("close");
 			        	$("#data").datagrid("reload");
-			        	$.messager.alert("提示","保存成功"); 
+			        	$("#data").datagrid("clearSelections");
+			        	$.messager.alert("提示","数据"+str+"成功"); 
 			        }else{
-			        	$.messager.alert("提示","保存失败"); 
+			        	$.messager.alert("提示","数据"+str+"失败"); 
 			        }
+			        $("#deptid").val("");
 			    }
 			});
   		}
@@ -189,28 +166,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			}else if(ss.length > 1){
   				$.messager.alert("提示","只能选择一条数据");
   			}else{
-	  			$("#edit-win").window("open");
-	  			$("#edit-form").form("reset");
-	  			$("#edit-form").form("load","user/getArea.do?aid="+ss[0].aid);
+	  			$("#dept-win").window("open");
+	  			$("#dept-win").window("setTitle","修改部门");
+	  			$("#dept-form").form("reset");
+	  			$("#dept-form").form("load","getDept.do?deptid="+ss[0].deptid);
   			}
-  		}
-  		function editData(){
-  			$("#edit-form").form("submit",{
-				url : "user/editArea.do",
-				onSubmit: function(){    
-			        return $(this).form("validate");   
-			    },    
-			    success:function(data){
-			        if(data){
-			        	$("#edit-win").window("close");
-			        	$("#data").datagrid("reload");
-			        	$("#data").datagrid("clearSelections");
-			        	$.messager.alert("提示","修改成功"); 
-			        }else{
-			        	$.messager.alert("提示","修改失败"); 
-			        }
-			    }
-			});
   		}
   		function delData(){
   			var ss = $("#data").datagrid("getSelections");
@@ -221,17 +181,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					if(r == false) return;
 					var ids = [];
 					for(var i=0;i<ss.length;i++){
-						ids.push(ss[i].aid);
+						ids.push(ss[i].deptid);
 					}
 					$.post("delDept.do",{
 						ids : ids
 					},function(data){
-						if(data){
-							alert(data);
+						if(data=="success"){
 		        			$("#data").datagrid("reload");
 		        			$("#data").datagrid("clearSelections");
-							$.messager.alert("提示","删除成功");
-						}
+							$.messager.alert("提示","数据删除成功");
+						}else{
+				        	$.messager.alert("提示","<p>数据删除失败</p><p>原因：数据中可能存在有子部门的父部门，情先删除子部门后才能进行删除操作</p>"); 
+				        }
 					});
 				});  
   			}
@@ -246,9 +207,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div data-options="region:'west',split:true" title="部门" style="width:220px;"">
 		<ul id="treeData"></ul>
 	</div> 
-	<div id="save-win">
+	<div id="dept-win">
 		<div style="padding: 20px 0px 0px 40px">
-			<form id="save-form" method="post">
+			<form id="dept-form" method="post">
+				<input type="hidden" id="deptid" name="deptid">
 	            <table>
 	                <tr>
 	                    <td>部门代码：</td>
@@ -256,46 +218,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                </tr>
 	                <tr>
 	                    <td>部门名称：</td>
-	                    <td><input class="check" name="dpetname" style="width: 150px;"/></td>
+	                    <td><input class="check" name="deptname" style="width: 150px;"/></td>
 	                </tr>
 	                <tr>
 	                    <td>部门经理：</td>
-	                    <td><input class="check" name="manager" style="width: 150px;"/></td>
+	                    <td><input class="check1" name="manager" style="width: 150px;"/></td>
 	                </tr>
 	                <tr>
 	                    <td>管理部门：</td>
-	                    <td><input class="check" id="parent" name="parent" style="width: 150px;"/></td>
+	                    <td><input class="check" id="parent" name="parent.deptid" style="width: 150px;"/></td>
 	                </tr>
 	                <tr>
 	                    <td>部门级别：</td>
-	                    <td><input class="check" name="deptlevel" style="width: 150px;"/></td>
+	                    <td><input class="check" id="deptlevel" name="deptlevel" style="width: 150px;"/></td>
 	                </tr>
 	            </table>
 			</form>
 		</div>
 		<div style="text-align: right; padding: 5px;">
-            <a href="javascript:void(0)" onclick="saveData()" id="save-btn">保存</a>
-            <a href="javascript:void(0)" onclick="closeWindow()" id="cancel-btn1">取消</a>
+            <a href="javascript:void(0)" onclick="confirm()" id="save-btn">确定</a>
+            <a href="javascript:void(0)" onclick="$('#dept-win').window('close')" id="cancel-btn">取消</a>
         </div>
 	</div>
-	
-	<!--
-	<div id="edit-win">
-		<div style="padding: 20px 0px 0px 40px">
-			<form id="edit-form" method="post">
-				<input type="hidden" name="aid">
-	            <table>
-	                <tr>
-	                    <td>地区名称：</td>
-	                    <td><input class="check" name="aname" style="width: 150px;"/></td>
-	                </tr>
-	            </table>
-			</form>
-		</div>
-		<div style="text-align: right; padding: 5px;">
-            <a href="javascript:void(0)" onclick="editData()" id="edit-btn">修改</a>
-            <a href="javascript:void(0)" onclick="closeWindow()" id="cancel-btn2">取消</a>
-        </div>
-	</div> -->
   </body>
 </html>

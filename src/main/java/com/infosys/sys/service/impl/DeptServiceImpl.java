@@ -1,5 +1,6 @@
 package com.infosys.sys.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -8,8 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.infosys.sys.dao.DeptDao;
 import com.infosys.sys.pojo.Dept;
+import com.infosys.sys.pojo.PageBean;
 import com.infosys.sys.pojo.TreeNode;
 import com.infosys.sys.service.DeptService;
+import com.infosys.sys.util.JsonUtil;
 
 /**
  * 
@@ -27,18 +30,22 @@ public class DeptServiceImpl implements DeptService{
 	private DeptDao deptDao;
 	
 	@Override
-	public void saveDept(Dept dept) throws Exception {
-		deptDao.insertDept(dept);
+	public boolean saveDept(Dept dept) throws Exception {
+		return deptDao.insertDept(dept);
 	}
 
 	@Override
-	public void editDept(Dept dept) throws Exception {
-		deptDao.updateDept(dept);
+	public boolean editDept(Dept dept) throws Exception {
+		return deptDao.updateDept(dept);
 	}
 
 	@Override
-	public void delDept(Integer[] ids) throws Exception {
-		deptDao.deleteDept(ids);
+	public boolean delDept(Integer[] ids) throws Exception {
+		int count = deptDao.getParent(ids);
+		if(count==0){
+			return deptDao.deleteDept(ids);
+		}
+		return false;
 	}
 
 	@Override
@@ -48,26 +55,44 @@ public class DeptServiceImpl implements DeptService{
 	}
 
 	@Override
-	public List<Dept> queryDept() throws Exception {
-		List<Dept> list = deptDao.queryDept();
-		return list;
+	public Map<String, Object> queryDept(PageBean pageBean) throws Exception {
+		List<Dept> list = deptDao.queryDept(pageBean);
+		Integer total = deptDao.queryDeptCount();
+		return JsonUtil.renderJson(list, total);
 	}
 
 	@Override
-	public List<TreeNode> quertDeptForTree(Integer parent) throws Exception {
-		List<TreeNode> list = deptDao.quertDeptForTree(parent);
-		
-		return list;
+	public List<TreeNode> deptTree(Integer deptid) throws Exception {
+		List<TreeNode> list = deptDao.deptTree(deptid);
+		List<TreeNode> treeList = new ArrayList<TreeNode>();
+		if(deptid==null){
+			for (TreeNode treeNode : list) {
+				if(treeNode.getParent()==null){
+					deptid=treeNode.getId();
+					break;
+				}
+			}
+		}
+		getChildren(list,treeList,deptid);
+		return treeList;
 	}
-	
-	public void getChildren(List<TreeNode> list) throws Exception {
+	/**
+	 * 获取部门树所有子节点
+	 * @param list
+	 * @throws Exception
+	 */
+	public void getChildren(List<TreeNode> list,List<TreeNode> treeList,Integer deptid) throws Exception {
+		TreeNode root = null;
 		for (TreeNode treeNode : list) {
-			List<TreeNode> sublist = deptDao.quertDeptForTree(treeNode.getId());
-			if(sublist!=null && sublist.size()>0){
-				treeNode.setChildren(sublist);
-				getChildren(sublist);
-			}else{
-				
+			if(treeNode.getId().equals(deptid)){
+				root = treeNode;
+				treeList.add(treeNode);
+				break;
+			}
+		}
+		for (TreeNode treeNode : list) {
+			if(deptid.equals(treeNode.getParent())){
+				getChildren(list,root.getChildren(),treeNode.getId());
 			}
 		}
 	}

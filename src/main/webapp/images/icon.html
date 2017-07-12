@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="../easyui1.5/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+    <link href="../easyui1.5/themes/icon.css" rel="stylesheet" type="text/css" />
+    <script src="../easyui1.5/jquery.min.js" type="text/javascript"></script>
+    <script src="../easyui1.5/jquery.easyui.min.js" type="text/javascript"></script>
+</head>
+<body>
+	<input id="cc" class="easyui-combotree" style="width: 200px;">
+	<script>
+		function getstyle() {
+			for (var i = 0; i < document.styleSheets.length; i++) {
+				var rules;
+				if (document.styleSheets[i].cssRules) {
+					rules = document.styleSheets[i].cssRules;
+				} else {
+					rules = document.styleSheets[i].rules;
+				}
+				for (var j = 0; j < rules.length; j++) {
+					if (rules[j].selectorText.substr(0, 5) == ".icon")
+						$('#cc').combotree('tree').tree('append', {
+							data : [ {
+								id : rules[j].selectorText.substr(1),
+								text : rules[j].selectorText.substr(1),
+								iconCls : rules[j].selectorText.substr(1)
+							} ]
+						});
+				}
+			}
+		}
+		$(function() {
+			getstyle();
+		});
+	</script>
+</body>
+</html>

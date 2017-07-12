@@ -3,12 +3,13 @@ package com.infosys.sys.dao;
 import java.util.List;
 
 import com.infosys.sys.pojo.Dept;
+import com.infosys.sys.pojo.PageBean;
 import com.infosys.sys.pojo.TreeNode;
 
 /**
  * 
  * <p>Title: DeptDao</p>
- * <p>Description: 部门Dao接口</p>
+ * <p>Description: 组织机构Dao接口</p>
  * <p>Company: www.infosys.com</p> 
  * @author 王森
  * @date 2017年7月6日下午4:34:01
@@ -16,11 +17,19 @@ import com.infosys.sys.pojo.TreeNode;
  */
 public interface DeptDao {
 
-	public void insertDept(Dept dept) throws Exception;
-	public void updateDept(Dept dept) throws Exception;
-	public void deleteDept(Integer[] ids) throws Exception;
+	public boolean insertDept(Dept dept) throws Exception;
+	public boolean updateDept(Dept dept) throws Exception;
+	public boolean deleteDept(Integer[] ids) throws Exception;
 	public Dept getDept(Integer deptid) throws Exception;
-	public List<Dept> queryDept() throws Exception;
-	public List<TreeNode> quertDeptForTree(Integer parent) throws Exception;
+	public List<Dept> queryDept(PageBean pageBean) throws Exception;
+	public int queryDeptCount() throws Exception;
+	/**
+	 * 部门树形结构
+	 */
+	public List<TreeNode> deptTree(Integer deptid) throws Exception;
+	/**
+	 * 获取父部门
+	 */
+	public int getParent(Integer[] ids) throws Exception;
 	
 }

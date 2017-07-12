@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.infosys.sys.pojo.Dept;
+import com.infosys.sys.pojo.PageBean;
 import com.infosys.sys.pojo.TreeNode;
 /**
  * 
@@ -15,11 +16,10 @@ import com.infosys.sys.pojo.TreeNode;
  * @version 1.0
  */
 public interface DeptService {
-	public void saveDept(Dept dept) throws Exception;
-	public void editDept(Dept dept) throws Exception;
-	public void delDept(Integer[] ids) throws Exception;
+	public boolean saveDept(Dept dept) throws Exception;
+	public boolean editDept(Dept dept) throws Exception;
+	public boolean delDept(Integer[] ids) throws Exception;
 	public Dept getDept(Integer deptid) throws Exception;
-	public List<Dept> queryDept() throws Exception;
-	public List<TreeNode> quertDeptForTree(Integer parent) throws Exception;
-	
+	public Map<String, Object> queryDept(PageBean pageBean) throws Exception;
+	public List<TreeNode> deptTree(Integer deptid) throws Exception;
 }

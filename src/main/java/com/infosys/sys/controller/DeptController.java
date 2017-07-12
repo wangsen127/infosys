@@ -3,16 +3,17 @@ package com.infosys.sys.controller;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.infosys.sys.pojo.Dept;
+import com.infosys.sys.pojo.PageBean;
 import com.infosys.sys.pojo.TreeNode;
 import com.infosys.sys.service.DeptService;
+import com.infosys.sys.util.JsonUtil;
 
 /**
  * 
@@ -35,32 +36,44 @@ public class DeptController {
 	}
 	
 	@RequestMapping("/saveDept.do")
-	public void saveDept(HttpServletResponse response, Dept dept) throws Exception {
-		deptService.saveDept(dept);
-		response.getWriter().write("true");
+	public @ResponseBody String saveDept(Dept dept) throws Exception {
+		boolean result = deptService.saveDept(dept);
+		if(result)
+			return "success";
+		return "failure";
 	}
 	
 	@RequestMapping("/editDept.do")
-	public void editDept(HttpServletResponse response, Dept dept) throws Exception {
-		deptService.editDept(dept);
-		response.getWriter().write("true");
+	public @ResponseBody String editDept(Dept dept) throws Exception {
+		boolean result = deptService.editDept(dept);
+		if(result)
+			return "success";
+		return "failure";
 	}
 	
 	@RequestMapping("/delDept.do")
-	public void delDept(HttpServletResponse response, Integer[] ids) throws Exception {
-		deptService.delDept(ids);
-		response.getWriter().write("true");
+	public @ResponseBody String delDept( @RequestParam("ids[]") Integer[] ids) throws Exception {
+		boolean result = deptService.delDept(ids);
+		if(result)
+			return "success";
+		return "failure";
+	}
+	
+	@RequestMapping("/getDept.do")
+	public @ResponseBody Dept getDept(Integer deptid) throws Exception {
+		Dept dept = deptService.getDept(deptid);
+		return dept;
 	}
 	
 	@RequestMapping("/queryDept.do")
-	public @ResponseBody List<Dept> queryDept() throws Exception {
-		List<Dept> list = deptService.queryDept();
-		return list;
+	public @ResponseBody Map<String, Object> queryDept(PageBean pageBean) throws Exception {
+		Map<String, Object> map = deptService.queryDept(pageBean);
+		return map;
 	}
 	
-	@RequestMapping("/quertDeptForTree.do")
-	public @ResponseBody List<TreeNode> quertDeptForTree(Integer parent) throws Exception{
-		List<TreeNode> list = deptService.quertDeptForTree(parent);
+	@RequestMapping("/deptTree.do")
+	public @ResponseBody List<TreeNode> deptTree(Integer deptid) throws Exception{
+		List<TreeNode> list = deptService.deptTree(deptid);
 		return list;
 	}
 }

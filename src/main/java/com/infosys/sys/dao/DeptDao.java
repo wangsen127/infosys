@@ -1,6 +1,7 @@
 package com.infosys.sys.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.infosys.sys.pojo.Dept;
 import com.infosys.sys.pojo.PageBean;
@@ -21,7 +22,7 @@ public interface DeptDao {
 	public boolean updateDept(Dept dept) throws Exception;
 	public boolean deleteDept(Integer[] ids) throws Exception;
 	public Dept getDept(Integer deptid) throws Exception;
-	public List<Dept> queryDept(PageBean pageBean) throws Exception;
+	public List<Dept> queryDept(Dept dept) throws Exception;
 	public int queryDeptCount() throws Exception;
 	/**
 	 * 部门树形结构

@@ -20,6 +20,6 @@ public interface DeptService {
 	public boolean editDept(Dept dept) throws Exception;
 	public boolean delDept(Integer[] ids) throws Exception;
 	public Dept getDept(Integer deptid) throws Exception;
-	public Map<String, Object> queryDept(PageBean pageBean) throws Exception;
+	public Map<String, Object> queryDept(Dept dept) throws Exception;
 	public List<TreeNode> deptTree(Integer deptid) throws Exception;
 }

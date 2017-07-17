@@ -1,0 +1,31 @@
+<div data-options="region:'north',split:true,border:false" title="查询条件" style="height:165px;overflow:hidden;">
+	<form id="user_list_searchForm">
+		检索用户名称:
+		<input name="susername" style="width: 315px;" />
+		创建时间:
+		<input name="createdatetimeStart" class="easyui-datebox"  data-options="editable:false" />至<input name="createdatetimeEnd" class="easyui-datebox"  data-options="editable:false"/>
+		最后修改时间:
+		<input name="modifydatetimeStart" class="easyui-datebox"  data-options="editable:false" />至<input name="modifydatetimeEnd" class="easyui-datebox"  data-options="editable:false"/>
+		<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="user_list_serarchFun();">查询</a>
+		<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="user_list_cleanFun();">清空条件</a>
+	</form>
+</div>
+
+<div id="tb" style="padding:5px;height:auto">    
+    <div>    
+        Date From: <input class="easyui-datebox" style="width:80px">    
+        To: <input class="easyui-datebox" style="width:80px">    
+        Language:     
+        <input class="easyui-combobox" style="width:100px"    
+                url="data/combobox_data.json"    
+                valueField="id" textField="text">    
+        <a href="#" class="easyui-linkbutton" iconCls="icon-search">Search</a>    
+    </div>
+    <div style="margin-bottom:5px">    
+        <a href="#" class="easyui-linkbutton" iconCls="icon-add"></a>    
+        <a href="#" class="easyui-linkbutton" iconCls="icon-edit"></a>    
+        <a href="#" class="easyui-linkbutton" iconCls="icon-save"></a>    
+        <a href="#" class="easyui-linkbutton" iconCls="icon-cut"></a>    
+        <a href="#" class="easyui-linkbutton" iconCls="icon-remove"></a>    
+    </div>
+</div>

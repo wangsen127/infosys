@@ -77,19 +77,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     	else return "";
                     }}
                 ]],
-                 toolbar: [{
-		            text: "新增",
-		            iconCls: "icon-add",
-		            handler: save
-		        }, '-', {
-		            text: "修改",
-		            iconCls: "icon-edit",
-		            handler: edit
-		        }, '-', {
-		            text: "删除",
-		            iconCls: "icon-remove",
-		            handler: delData
-		        }]
+                 toolbar: "#tb"
   			});
   			
   			//设置表单元素为必填
@@ -117,12 +105,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    minimizable:false,
 			    closed:true
   			});
-  			$("#save-btn").linkbutton({    
-			    iconCls: "icon-save"
-			});  
-			$("#cancel-btn").linkbutton({    
-			    iconCls: "icon-cancel"
-			}); 
   		});
   		
   		
@@ -197,15 +179,39 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				});  
   			}
   		}
+  		function queryData(){
+  			$("#data").datagrid("load",{
+  				deptname:$("#qname").val(),
+  				"parent.deptid":$("#qparent").val(),
+  				deptlevel:$("#qlevel").val()
+  			});
+  		}
   	</script>
   </head>
   
   <body class="easyui-layout">
-	<div data-options="region:'center'">
+	<div data-options="region:'center',border:false">
 		<div id="data"></div>
 	</div>
-	<div data-options="region:'west',split:true" title="部门" style="width:220px;"">
+	<div data-options="region:'west',split:true,border:false" title="部门" style="width:220px;"">
 		<ul id="treeData"></ul>
+	</div> 
+	<div id="tb" style="padding:5px;height:auto">    
+	    <div>
+	    	部门名称:<input id="qname" class="easyui-textbox" style="width:100px">    
+	                父部门:
+	        <input id="qparent" class="easyui-combotree" style="width:150px" data-options="url:'deptTree.do',valueField:'id',textField:'text'">    
+	                部门级别:
+	        <input id="qlevel" class="easyui-combotree" style="width:150px" data-options="url:'js/deptlevel.json',valueField:'id',textField:'text'">    
+	        <a href="javascript:queryData()" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">查询</a>    
+	    </div>
+	    <div style="margin-bottom:5px">    
+	        <a href="javascript:save()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">新增</a>
+	        <span class="datagrid-btn-separator" style="vertical-align: middle;display:inline-block;float:none"></span>
+	        <a href="javascript:edit()" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a>
+	        <span class="datagrid-btn-separator" style="vertical-align: middle;display:inline-block;float:none"></span>
+	        <a href="javascript:delData()" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除</a>    
+	    </div>
 	</div> 
 	<div id="dept-win">
 		<div style="padding: 20px 0px 0px 40px">
@@ -236,8 +242,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</form>
 		</div>
 		<div style="text-align: right; padding: 5px;">
-            <a href="javascript:void(0)" onclick="confirm()" id="save-btn">确定</a>
-            <a href="javascript:void(0)" onclick="$('#dept-win').window('close')" id="cancel-btn">取消</a>
+            <a href="javascript:void(0)" onclick="confirm()" class="easyui-linkbutton" data-options="iconCls:'icon-save'">确定</a>
+            <a href="javascript:void(0)" onclick="$('#dept-win').window('close')" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">取消</a>
         </div>
 	</div>
   </body>

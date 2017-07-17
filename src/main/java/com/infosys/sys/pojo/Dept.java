@@ -8,7 +8,7 @@ package com.infosys.sys.pojo;
  * @date 2017年7月6日下午3:46:59
  * @version 1.0
  */
-public class Dept {
+public class Dept extends PageBean{
 	private Integer deptid;
 	private String deptcode;
 	private String deptname;

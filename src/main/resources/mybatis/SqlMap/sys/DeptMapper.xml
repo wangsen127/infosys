@@ -32,7 +32,7 @@
 		where
 			a.delflag=1 and a.deptid=#{deptid}
 	</select>
-	<select id="queryDept" parameterType="com.infosys.sys.pojo.PageBean" resultMap="deptMap">
+	<select id="queryDept" parameterType="map" resultMap="deptMap">
 		select
 			a.deptid,a.deptcode,a.deptname,a.manager,a.parent,a.deptlevel,
 			b.deptid 'parentdeptid',b.deptcode 'parentdeptcode',

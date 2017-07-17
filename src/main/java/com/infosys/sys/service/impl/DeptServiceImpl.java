@@ -55,8 +55,8 @@ public class DeptServiceImpl implements DeptService{
 	}
 
 	@Override
-	public Map<String, Object> queryDept(PageBean pageBean) throws Exception {
-		List<Dept> list = deptDao.queryDept(pageBean);
+	public Map<String, Object> queryDept(Dept dept) throws Exception {
+		List<Dept> list = deptDao.queryDept(dept);
 		Integer total = deptDao.queryDeptCount();
 		return JsonUtil.renderJson(list, total);
 	}

@@ -32,7 +32,7 @@
 		where
 			a.delflag=1 and a.deptid=#{deptid}
 	</select>
-	<select id="queryDept" parameterType="map" resultMap="deptMap">
+	<select id="queryDept" parameterType="com.infosys.sys.pojo.Dept" resultMap="deptMap">
 		select
 			a.deptid,a.deptcode,a.deptname,a.manager,a.parent,a.deptlevel,
 			b.deptid 'parentdeptid',b.deptcode 'parentdeptcode',
@@ -41,6 +41,15 @@
 			t_sys_dept a left join t_sys_dept b on(a.parent=b.deptid)
 		where
 			a.delflag=1
+		<if test="deptname!=null">
+			and a.deptname like concat('%',#{deptname},'%')
+		</if>
+		<if test="parent!=null and parent.deptid!=null">
+			and a.parent=#{parent.deptid}
+		</if>
+		<if test="deptlevel!=null">
+			and a.deptlevel=#{deptlevel}
+		</if>
 		limit #{begin},#{rows}
 	</select>
 	<select id="queryDeptCount" resultType="integer">

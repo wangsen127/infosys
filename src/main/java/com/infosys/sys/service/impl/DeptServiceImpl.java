@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.infosys.sys.dao.DeptDao;
 import com.infosys.sys.pojo.Dept;
-import com.infosys.sys.pojo.PageBean;
 import com.infosys.sys.pojo.TreeNode;
 import com.infosys.sys.service.DeptService;
 import com.infosys.sys.util.JsonUtil;

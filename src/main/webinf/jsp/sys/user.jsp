@@ -9,7 +9,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <head>
     <base href="<%=basePath%>">
     
-    <title>部门信息</title>
+    <title>用户信息</title>
     
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
@@ -25,20 +25,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <script src="easyui1.5/jquery.easyui.min.js" type="text/javascript"></script>
     <script src="easyui1.5/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
   	<script type="text/javascript">
-  		//var ids = [];
+  		var deptid;
   		$(function(){
+  			$("#treeData").tree({    
+  			    url:"deptTree.do",
+  				onClick:function(node){
+  					$("#queryForm").form("reset");
+  					deptid = node.id;
+  					$("#data").datagrid("load",{"dept.deptid":node.id});
+  				}
+  			}); 
   			//表格
   			$("#data").datagrid({ 
-  				//title: "部门管理",
-        		//iconCls: "icon-save",
-        		url: "queryDept.do",
-        		//queryParams:{
-        			//deptno : 1
-        		//},
+        		url: "queryUser.do",
         		fitColumns:true, //自动展开/收缩列的大小
         		striped:true,//斑马线效果
         		method:"post",
-        		idField:"deptid", //指明哪一个字段是标识字段
+        		idField:"userid", //指明哪一个字段是标识字段
 		        rownumbers: true, //显示一个行号列
 		        singleSelect: false,//只允许选择一行
                 pagination: true,//显示分页 
@@ -47,30 +50,33 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		        sortOrder:"asc",//排序顺序
 		        fit:true,
 		        columns: [[
-		        	//title标题文本
-		        	//field字段名称
-		        	//width宽度。如果没有定义，宽度将自动扩充以适应其内容
-		        	//align对齐列数据。可以使用的值有：'left','right','center'。
-		        	//halign对齐列标题
-		        	//hidden隐藏列
-		        	//sortable允许列使用排序
-		        	//checkbox显示复选框
                     {field:"cb", checkbox:true},
-                    {field:"deptid", hidden:true},
-                    {field:"deptcode", title: "部门代码", width:15},
-                    {field:"deptname", title: "部门名称", width:20},
-                    {field:"manager", title: "部门经理", width:10},
-                    {field:"parent", title: "父部门", width:20, formatter: function(value,row,index){
+                    {field:"userid", hidden:true},
+                    {field:"usercode", title: "用户代码", width:10},
+                    {field:"username", title: "用户姓名", width:10},
+                    {field:"dept", title: "部门名称", width:10, formatter: function(value,row,index){
                     	if(value)
                     		return value.deptname;
                     	return "";
                     }},
-                    {field:"deptlevel", title: "部门级别", width:10, formatter: function(value){
-                    	if(value == 1) return "总部";
-                    	else if(value == 2) return "地区";
-                    	else if(value == 3) return "部门";
+                    //{field:"password", title: "密码", width:10},
+                    {field:"email", title: "邮箱", width:15},
+                    {field:"postid", title: "岗位", width:10},
+                    {field:"plevelid", title: "职务级别", width:10},
+                    {field:"sex", title: "性别", width:5, formatter: function(value){
+                    	if(value == 1) return "男";
+                    	else if(value == 0) return "女";
                     	else return "";
-                    }}
+                    }},
+                    {field:"birthday", title: "出生日期", width:10},
+                    {field:"cellphone", title: "手机", width:15},
+                    {field:"home_phone", title: "家庭电话", width:15},
+                    {field:"office_phone", title: "办公电话", width:15},
+                    {field:"address", title: "家庭地址", width:10},
+                    {field:"remark", title: "备注", width:10},
+                    //{field:"pic", title: "照片", width:10},
+                    {field:"loginIP", title: "最后登录IP", width:10},
+                    {field:"loginDate", title: "最后登录时间", width:10}
                 ]],
                  toolbar: "#tb"
   			});
@@ -93,33 +99,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			}); 
 
   			//保存窗口
-  			$("#dept-win").dialog({
+  			$("#dept-win").window({
   				width:350,    
 			    height:248,
-			    resizable:true,
-			    closed:true,
-			    modal:true,
-			    buttons:[{
-			    	text:"确定",
-			    	iconCls:"icon-save",
-			    	handler:confirm
-			    },{
-			    	text:"取消",
-			    	iconCls:"icon-cancel",
-			    	handler:function(){
-			    		$("#dept-win").dialog("close");
-			    	}	
-			    }],
-			    onClose:function(){
-			    	$("#dept-form").form("reset");
-			    }
+			    collapsible:false,
+			    minimizable:false,
+			    closed:true
   			});
   		});
   		
   		
   		function save(){
-  			$("#dept-win").dialog("open");
-  			$("#dept-win").dialog("setTitle","新增部门");
+  			$("#dept-win").window("open");
+  			$("#dept-win").window("setTitle","新增部门");
+  			$("#dept-form").form("reset");
   		}
 		function confirm(){
 			var url = "";
@@ -138,7 +131,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    },    
 			    success:function(data){
 			        if(data=="success"){
-			        	$("#dept-win").dialog("close");
+			        	$("#dept-win").window("close");
 			        	$("#data").datagrid("reload");
 			        	$("#data").datagrid("clearSelections");
 			        	$.messager.alert("提示","数据"+str+"成功"); 
@@ -156,8 +149,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			}else if(ss.length > 1){
   				$.messager.alert("提示","只能选择一条数据");
   			}else{
-	  			$("#dept-win").dialog("open");
-	  			$("#dept-win").dialog("setTitle","修改部门");
+	  			$("#dept-win").window("open");
+	  			$("#dept-win").window("setTitle","修改部门");
+	  			$("#dept-form").form("reset");
 	  			$("#dept-form").form("load","getDept.do?deptid="+ss[0].deptid);
   			}
   		}
@@ -188,9 +182,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		}
   		function queryData(){
   			$("#data").datagrid("load",{
-  				deptname:$("#qname").val(),
-  				"parent.deptid":$("#qparent").val(),
-  				deptlevel:$("#qlevel").val()
+  				"dept.deptid":deptid,
+  				username:$("#qname").val(),
+  				postid:$("#qpost").val(),
+  				plevelid:$("#qplevel").val()
   			});
   		}
   	</script>
@@ -200,14 +195,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div data-options="region:'center',border:false">
 		<div id="data"></div>
 	</div>
+	<div data-options="region:'west',split:true,border:false" title="组织机构" style="width:220px;"">
+		<ul id="treeData"></ul>
+	</div>
 	<div id="tb" style="padding:5px;height:auto">    
 	    <div>
 	    <form id="queryForm">
-	    	部门名称:<input id="qname" class="easyui-textbox" style="width:100px">    
-	                父部门:
-	        <input id="qparent" class="easyui-combotree" style="width:150px" data-options="url:'deptTree.do',valueField:'id',textField:'text'">    
-	                部门级别:
-	        <input id="qlevel" class="easyui-combotree" style="width:150px" data-options="url:'js/deptlevel.json',valueField:'id',textField:'text'">    
+	    	用户姓名:<input id="qname" class="easyui-textbox" style="width:100px">    
+	                岗位:
+	        <input id="qpost" class="easyui-combotree" style="width:150px" data-options="url:'',valueField:'id',textField:'text'">    
+	                职务级别:
+	        <input id="qplevel" class="easyui-combotree" style="width:150px" data-options="url:'',valueField:'id',textField:'text'">    
 	        <a href="javascript:void(0)" onclick="queryData()" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">查询</a>
 	        <a href="javascript:void(0)" onclick="$('#queryForm').form('reset');" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true">清空条件</a>    
 	    </form>
@@ -220,34 +218,38 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	        <a href="javascript:void(0)" onclick="delData()" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除</a>    
 	    </div>
 	</div> 
-	<div id="dept-win">
-		<!-- <div style="padding: 20px 0px 0px 40px"> -->
-			<form id="dept-form" method="post">
-				<input type="hidden" id="deptid" name="deptid">
-	            <table bordercolor="" border="1" style="margin: 20px 0px 0px 40px">
+	<div id="user-win">
+		<div style="padding: 20px 0px 0px 40px">
+			<form id="user-form" method="post">
+				<input type="hidden" id="userid" name="userid">
+	            <table>
 	                <tr>
-	                    <td>部门代码：</td>
-	                    <td><input class="check" name="deptcode" style="width: 150px;"/></td>
+	                    <td>用户代码：</td>
+	                    <td><input class="check" name="usercode" style="width: 150px;"/></td>
 	                </tr>
 	                <tr>
-	                    <td>部门名称：</td>
-	                    <td><input class="check" name="deptname" style="width: 150px;"/></td>
+	                    <td>用户姓名：</td>
+	                    <td><input class="check" name="username" style="width: 150px;"/></td>
 	                </tr>
 	                <tr>
-	                    <td>部门经理：</td>
-	                    <td><input class="check1" name="manager" style="width: 150px;"/></td>
+	                    <td>所在部门：</td>
+	                    <td><input class="check" id="dept" name="dept.deptid" style="width: 150px;"/></td>
 	                </tr>
 	                <tr>
-	                    <td>管理部门：</td>
-	                    <td><input class="check" id="parent" name="parent.deptid" style="width: 150px;"/></td>
+	                    <td>邮箱：</td>
+	                    <td><input class="check" name="email" style="width: 150px;"/></td>
 	                </tr>
 	                <tr>
-	                    <td>部门级别：</td>
-	                    <td><input class="check" id="deptlevel" name="deptlevel" style="width: 150px;"/></td>
+	                    <td>岗位：</td>
+	                    <td><input class="check" name="postid" style="width: 150px;"/></td>
 	                </tr>
 	            </table>
 			</form>
-		<!-- </div> -->
+		</div>
+		<div style="text-align: right; padding: 5px;">
+            <a href="javascript:void(0)" onclick="confirm()" class="easyui-linkbutton" data-options="iconCls:'icon-save'">确定</a>
+            <a href="javascript:void(0)" onclick="$('#dept-win').window('close')" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">取消</a>
+        </div>
 	</div>
   </body>
 </html>

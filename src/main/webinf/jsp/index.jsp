@@ -76,7 +76,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     	<div id="logodiv"><img alt="信息系统" src="images/logo.png"></div>
     	<div id="logoutdiv">
     		当前登录用户：${loginUser.username }
-    		<p><a href="user/logout.do">退出系统</a></p>
+    		<p><a href="user/logout.html">退出系统</a></p>
     	</div>
     </div>
 	<div data-options="region:'south'" style="height:50px;"></div>
@@ -105,7 +105,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div title="系统设置" style="padding:10px;" data-options="selected:true,iconCls:'icon-edit'">
                 <ul class="easyui-tree">
                     <li>
-                        <a title="用户管理" name="user/user.jsp">用户管理</a>
+                        <a title="用户管理" name="user.html">用户管理</a>
                     </li>
                     <li>
                         <a title="部门管理" name="dept.html">部门管理</a>

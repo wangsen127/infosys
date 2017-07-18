@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 命名空间的名称与 dao接口的全限定名称保持一致 -->
+<mapper namespace="com.infosys.sys.dao.UserDao">
+
+	<!-- 标签的id 与 dao的方法名称 一致 -->
+	<insert id="insertUser" parameterType="com.infosys.sys.pojo.User"
+		useGeneratedKeys="true" keyProperty="userid">
+		insert into
+		t_sys_user(usercode,username,deptid,password,email,postid,plevelid,sex,birthday,
+					cellphone,home_phone,office_phone,address,remark,pic,loginIP,loginDate)
+		values(#{usercode},#{username},#{dept.deptid},#{password},#{email},#{postid},#{plevelid},
+				#{sex},#{birthday},#{cellphone},#{home_phone},#{office_phone},#{address},#{remark},
+				#{pic},#{loginIP},#{loginDate})
+	</insert>
+	<update id="updateUser" parameterType="com.infosys.sys.pojo.User">
+		update t_sys_user set
+		usercode=#{usercode},username=#{username},deptid=#{dept.deptid},password=#{password},email=#{email},
+		postid=#{postid},plevelid=#{plevelid},sex=#{sex},birthday=#{birthday},cellphone=#{cellphone},
+		home_phone=#{home_phone},office_phone=#{office_phone},address=#{address},remark=#{remark},pic=#{pic},
+		loginIP=#{loginIP},loginDate=#{loginDate}
+		where userid=#{userid}
+	</update>
+	<update id="deleteUser" parameterType="integer">
+		update t_sys_user set delflag=0 where userid in
+		<foreach collection="array" open="(" close=")" separator="," item="id">
+		#{id}
+		</foreach>
+	</update>
+	<select id="getUser" parameterType="integer" resultMap="userMap">
+		select
+			a.userid,a.usercode,a.username,a.deptid,a.password,a.email,a.postid,a.plevelid,a.sex,a.birthday,
+			a.cellphone,a.home_phone,a.office_phone,a.address,a.remark,a.pic,a.loginIP,a.loginDate,
+			b.deptid,b.deptcode,b.deptname,b.deptlevel
+		from
+			t_sys_user a join t_sys_dept b on(a.deptid=b.deptid)
+		where
+			a.delflag=1 and a.userid=#{userid}
+	</select>
+	<select id="queryUser" parameterType="com.infosys.sys.pojo.User" resultMap="userMap">
+		select
+			a.userid,a.usercode,a.username,a.deptid,a.password,a.email,a.postid,a.plevelid,a.sex,a.birthday,
+			a.cellphone,a.home_phone,a.office_phone,a.address,a.remark,a.pic,a.loginIP,a.loginDate,
+			b.deptid,b.deptcode,b.deptname,b.deptlevel
+		from
+			t_sys_user a join t_sys_dept b on(a.deptid=b.deptid)
+		where
+			a.delflag=1
+		<if test="username!=null">
+			and a.username like concat('%',#{username},'%')
+		</if>
+		<if test="dept!=null and dept.deptid!=null">
+			and FIND_IN_SET(a.deptid, getChildList(#{dept.deptid}))
+		</if>
+		<if test="postid!=null">
+			and a.postid=#{postid}
+		</if>
+		<if test="plevelid!=null">
+			and a.plevelid=#{plevelid}
+		</if>
+		limit #{begin},#{rows}
+	</select>
+	<select id="queryUserCount" resultType="integer">
+		select
+			count(*)
+		from
+			t_sys_user a join t_sys_dept b on(a.deptid=b.deptid)
+		where
+			a.delflag=1
+	</select>
+	<resultMap type="com.infosys.sys.pojo.User" id="userMap">
+		<id column="userid" property="userid" />
+		<result column="usercode" property="usercode" />
+		<result column="username" property="username" />
+		<result column="password" property="password" />
+		<result column="email" property="email" />
+		<result column="postid" property="postid" />
+		<result column="plevelid" property="plevelid" />
+		<result column="sex" property="sex" />
+		<result column="birthday" property="birthday" />
+		<result column="cellphone" property="cellphone" />
+		<result column="home_phone" property="home_phone" />
+		<result column="office_phone" property="office_phone" />
+		<result column="address" property="address" />
+		<result column="remark" property="remark" />
+		<result column="pic" property="pic" />
+		<result column="loginIP" property="loginIP" />
+		<result column="loginDate" property="loginDate" />
+		<association property="dept" javaType="com.infosys.sys.pojo.Dept">
+			<id column="deptid" property="deptid" />
+			<result column="deptcode" property="deptcode" />
+			<result column="deptname" property="deptname" />
+			<result column="deptlevel" property="deptlevel" />
+		</association>
+	</resultMap>
+</mapper>

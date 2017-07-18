@@ -29,3 +29,11 @@
         <a href="#" class="easyui-linkbutton" iconCls="icon-remove"></a>    
     </div>
 </div>
+
+<div data-options="region:'west',split:true,border:false" title="部门" style="width:220px;"">
+	<ul id="treeData"></ul>
+</div>
+//测试树
+$("#treeData").tree({    
+    url:"deptTree.do"
+});  

@@ -17,7 +17,8 @@
     	<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
     </context:component-scan>
-    <!-- mvc:annotation-driven 
+    <!-- mvc:annotation-driven
+    conversion-service="conversionService" 
     validator="validator"
     -->
     <mvc:annotation-driven>
@@ -32,5 +33,32 @@
     <!--
            让springmvc不拦截静态资源 
 	<mvc:resources mapping="/static/**" location="/WEB-INF/static/"/>
-     -->
+    
+	<mvc:message-converters>
+        <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+            <property name="supportedMediaTypes">
+                <list>
+                    <value>text/html;charset=UTF-8</value>
+                </list>
+            </property>
+            <property name="objectMapper">
+                <bean class="org.codehaus.jackson.map.ObjectMapper">
+                    <property name="dateFormat">
+                        <bean class="java.text.SimpleDateFormat">
+                            <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss"></constructor-arg>
+                        </bean>
+                    </property>
+                </bean>
+            </property>
+        </bean>
+	</mvc:message-converters>
+	 -->
+	<!-- 日期类型转换器 -->
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="formatters">
+			<bean class="com.infosys.sys.converter.DateFormatter">
+				<constructor-arg value="yyyy-MM-dd"></constructor-arg>
+			</bean>
+		</property>
+	</bean>
 </beans>

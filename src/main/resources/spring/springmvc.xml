@@ -18,10 +18,9 @@
     	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
     </context:component-scan>
     <!-- mvc:annotation-driven
-    conversion-service="conversionService" 
     validator="validator"
     -->
-    <mvc:annotation-driven>
+    <mvc:annotation-driven conversion-service="conversionService">
     </mvc:annotation-driven>
     
     <!-- 视图解析器 -->

@@ -19,6 +19,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
+	<link href="js/custom.css"  rel="stylesheet" type="text/css" />
 	<link href="easyui1.5/themes/default/easyui.css" rel="stylesheet" type="text/css" />
     <link href="easyui1.5/themes/icon.css" rel="stylesheet" type="text/css" />
     <script src="easyui1.5/jquery.min.js" type="text/javascript"></script>
@@ -75,28 +76,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                  toolbar: "#tb"
   			});
   			
-  			//设置表单元素为必填
-			$(".check").validatebox({    
-			    required: true
-			}); 
-  			
-  			//设置部门下拉树
-  			$("#parent").combotree({    
-  			    url:"deptTree.do" 
-  			});
-  			
-  			//设置部门级别下拉选
-  			$("#deptlevel").combobox({    
-  				valueField:"id",    
-  			    textField:"text",
-  			    url:"js/deptlevel.json"
-  			}); 
-
   			//保存窗口
-  			$("#dept-win").dialog({
-  				width:350,    
-			    height:248,
-			    resizable:true,
+  			$("#div-win").dialog({
+  				width:470,    
+			    height:310,
+			    //resizable:true,
 			    closed:true,
 			    modal:true,
 			    buttons:[{
@@ -107,19 +91,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    	text:"取消",
 			    	iconCls:"icon-cancel",
 			    	handler:function(){
-			    		$("#dept-win").dialog("close");
+			    		$("#div-win").dialog("close");
 			    	}	
 			    }],
 			    onClose:function(){
-			    	$("#dept-form").form("reset");
+			    	$("#div-form").form("reset");
 			    }
   			});
   		});
   		
   		
   		function save(){
-  			$("#dept-win").dialog("open");
-  			$("#dept-win").dialog("setTitle","新增部门");
+  			$("#div-win").dialog("open");
+  			$("#div-win").dialog("setTitle","新增部门");
   		}
 		function confirm(){
 			var url = "";
@@ -131,14 +115,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				url = "saveDept.do";
 				str = "新增";
 			}
-			$("#dept-form").form("submit",{
+			$("#div-form").form("submit",{
 				url : url,
 				onSubmit: function(){    
 			    	return $(this).form("validate");        
 			    },    
 			    success:function(data){
 			        if(data=="success"){
-			        	$("#dept-win").dialog("close");
+			        	$("#div-win").dialog("close");
 			        	$("#data").datagrid("reload");
 			        	$("#data").datagrid("clearSelections");
 			        	$.messager.alert("提示","数据"+str+"成功"); 
@@ -156,9 +140,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			}else if(ss.length > 1){
   				$.messager.alert("提示","只能选择一条数据");
   			}else{
-	  			$("#dept-win").dialog("open");
-	  			$("#dept-win").dialog("setTitle","修改部门");
-	  			$("#dept-form").form("load","getDept.do?deptid="+ss[0].deptid);
+	  			$("#div-win").dialog("open");
+	  			$("#div-win").dialog("setTitle","修改部门");
+	  			$("#div-form").form("load","getDept.do?deptid="+ss[0].deptid);
   			}
   		}
   		function delData(){
@@ -220,34 +204,32 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	        <a href="javascript:void(0)" onclick="delData()" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除</a>    
 	    </div>
 	</div> 
-	<div id="dept-win">
-		<!-- <div style="padding: 20px 0px 0px 40px"> -->
-			<form id="dept-form" method="post">
-				<input type="hidden" id="deptid" name="deptid">
-	            <table bordercolor="" border="1" style="margin: 20px 0px 0px 40px">
-	                <tr>
-	                    <td>部门代码：</td>
-	                    <td><input class="check" name="deptcode" style="width: 150px;"/></td>
-	                </tr>
-	                <tr>
-	                    <td>部门名称：</td>
-	                    <td><input class="check" name="deptname" style="width: 150px;"/></td>
-	                </tr>
-	                <tr>
-	                    <td>部门经理：</td>
-	                    <td><input class="check1" name="manager" style="width: 150px;"/></td>
-	                </tr>
-	                <tr>
-	                    <td>管理部门：</td>
-	                    <td><input class="check" id="parent" name="parent.deptid" style="width: 150px;"/></td>
-	                </tr>
-	                <tr>
-	                    <td>部门级别：</td>
-	                    <td><input class="check" id="deptlevel" name="deptlevel" style="width: 150px;"/></td>
-	                </tr>
-	            </table>
-			</form>
-		<!-- </div> -->
+	<div id="div-win">
+		<form id="div-form" method="post">
+			<input type="hidden" id="deptid" name="deptid">
+            <table>
+                <tr>
+                    <th>部门代码：</th>
+                    <td><input class="easyui-textbox" data-options="required:true" name="deptcode"/></td>
+                </tr>
+                <tr>
+                    <th>部门名称：</th>
+                    <td><input class="easyui-textbox" data-options="required:true" name="deptname"/></td>
+                </tr>
+                <tr>
+                    <th>部门经理：</th>
+                    <td><input class="easyui-textbox" name="manager"/></td>
+                </tr>
+                <tr>
+                    <th>管理部门：</th>
+                    <td><input class="easyui-combotree" data-options="url:'deptTree.do',required:true" name="parent.deptid"/></td>
+                </tr>
+                <tr>
+                    <th>部门级别：</th>
+                    <td><input class="easyui-combobox" data-options="valueField:'id',textField:'text',url:'js/deptlevel.json',required:true" name="deptlevel"/></td>
+                </tr>
+            </table>
+		</form>
 	</div>
   </body>
 </html>

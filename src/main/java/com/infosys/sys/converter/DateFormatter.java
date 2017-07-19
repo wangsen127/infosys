@@ -18,13 +18,11 @@ public class DateFormatter implements Formatter<Date>{
 	}
 	@Override
 	public String print(Date arg0, Locale arg1) {
-		// TODO Auto-generated method stub
 		return sdf.format(arg0);
 	}
 
 	@Override
 	public Date parse(String arg0, Locale arg1) throws ParseException {
-		// TODO Auto-generated method stub
 		return sdf.parse(arg0);
 	}
 }

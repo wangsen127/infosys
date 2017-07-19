@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.infosys.sys.pojo.User;
 import com.infosys.sys.service.UserService;
+import com.infosys.sys.util.ConstantUtil;
+import com.infosys.sys.util.MD5Util;
 
 /**
  * 
@@ -34,6 +36,7 @@ public class UserController {
 	
 	@RequestMapping("/saveUser.do")
 	public @ResponseBody String saveUser(User user) throws Exception {
+		user.setPassword(MD5Util.toMD5(ConstantUtil.PASSWORD));
 		boolean result = userService.saveUser(user);
 		if(result)
 			return "success";

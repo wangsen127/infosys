@@ -29,7 +29,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		//var ids = [];
   		$(function(){
   			//表格
-  			$("#data").datagrid({ 
+  			$("#data").datagrid({
   				//title: "部门管理",
         		//iconCls: "icon-save",
         		url: "queryDept.do",
@@ -60,7 +60,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     {field:"deptid", hidden:true},
                     {field:"deptcode", title: "部门代码", width:15},
                     {field:"deptname", title: "部门名称", width:20},
-                    {field:"manager", title: "部门经理", width:10},
+                    {field:"manager", title: "部门经理", width:10, formatter: function(value,row,index){
+                    	if(value)
+                    		return value.username;
+                    	return "";
+                    }},
                     {field:"parent", title: "父部门", width:20, formatter: function(value,row,index){
                     	if(value)
                     		return value.deptname;
@@ -73,7 +77,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     	else return "";
                     }}
                 ]],
-                 toolbar: "#tb"
+                toolbar: "#tb"
   			});
   			
   			//保存窗口
@@ -97,6 +101,63 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    onClose:function(){
 			    	$("#div-form").form("reset");
 			    }
+  			});
+  			
+  			//部门经理下拉表格
+  			$("#manager").combogrid({
+  				url: "queryUser.do",
+        		fitColumns:true, //自动展开/收缩列的大小
+        		striped:true,//斑马线效果
+        		method:"post",
+        		idField:"userid", //指明哪一个字段是标识字段
+		        rownumbers: true, //显示一个行号列
+		        singleSelect: true,//只允许选择一行
+                pagination: true,//显示分页 
+		        pageSize:10,//分页大小  
+		        pageList:[10,20,30,40,50],//每页的个数  
+  			    textField:"username",
+  			  	panelWidth:450,
+  			  	//required:true,
+  			    columns:[[    
+  			    	{field:"username", title: "真实姓名", width:10},
+  			        {field:"dept", title: "部门名称", width:10, formatter: function(value,row,index){
+                    	if(value)
+                    		return value.deptname;
+                    	return "";
+                    }},
+                    {field:"postid", title: "岗位", width:10},
+                    {field:"plevelid", title: "职务级别", width:10},
+                    {field:"cellphone", title: "手机", width:15},
+                    {field:"sex", title: "性别", width:5, formatter: function(value){
+                    	if(value == 1) return "男";
+                    	else if(value == 2) return "女";
+                    	else return "";
+                    }}
+  			    ]],
+  			  	toolbar:[{
+  			  		text:"用户姓名:<input id='qusername' class='easyui-textbox' style='width:100px'>"
+  			  	},{
+  			  		text:"查询",
+  			  		iconCls:"icon-search",
+  			  		handler:function(){
+	  			  		$("#manager").combogrid("grid").datagrid("load",{
+	  			  			username:$("#qusername").val()
+	  		  			});
+  			  		}
+  			  	}]
+  			});
+  			
+  			//验证部门代码是否重复
+  			$("#deptcode").textbox("textbox").blur(function(){
+  				var deptcode = $("#deptcode").val();
+  				if(deptcode){
+	  				$.post("existsDept.do",{deptcode:deptcode},function(data){
+	  					if(data=="success"){
+						}else{
+				        	$.messager.alert("提示","部门代码已存在！"); 
+				        }
+	  				});
+  				}
   			});
   		});
   		
@@ -172,9 +233,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		}
   		function queryData(){
   			$("#data").datagrid("load",{
-  				deptname:$("#qname").val(),
+  				deptname:$("#qdeptname").val(),
   				"parent.deptid":$("#qparent").val(),
-  				deptlevel:$("#qlevel").val()
+  				deptlevel:$("#qdeptlevel").val()
   			});
   		}
   	</script>
@@ -187,11 +248,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div id="tb" style="padding:5px;height:auto">    
 	    <div>
 	    <form id="queryForm">
-	    	部门名称:<input id="qname" class="easyui-textbox" style="width:100px">    
+	    	部门名称:<input id="qdeptname" class="easyui-textbox" style="width:100px">    
 	                父部门:
 	        <input id="qparent" class="easyui-combotree" style="width:150px" data-options="url:'deptTree.do',valueField:'id',textField:'text'">    
 	                部门级别:
-	        <input id="qlevel" class="easyui-combotree" style="width:150px" data-options="url:'js/deptlevel.json',valueField:'id',textField:'text'">    
+	        <input id="qdeptlevel" class="easyui-combotree" style="width:150px" data-options="url:'js/deptlevel.json',valueField:'id',textField:'text'">    
 	        <a href="javascript:void(0)" onclick="queryData()" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">查询</a>
 	        <a href="javascript:void(0)" onclick="$('#queryForm').form('reset');" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true">清空条件</a>    
 	    </form>
@@ -210,7 +271,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             <table>
                 <tr>
                     <th>部门代码：</th>
-                    <td><input class="easyui-textbox" data-options="required:true" name="deptcode"/></td>
+                    <td><input id="deptcode" class="easyui-textbox" data-options="required:true" name="deptcode"/></td>
                 </tr>
                 <tr>
                     <th>部门名称：</th>
@@ -218,7 +279,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 </tr>
                 <tr>
                     <th>部门经理：</th>
-                    <td><input class="easyui-textbox" name="manager"/></td>
+                    <td><input id="manager" class="easyui-textbox" name="manager.userid"/></td>
                 </tr>
                 <tr>
                     <th>管理部门：</th>

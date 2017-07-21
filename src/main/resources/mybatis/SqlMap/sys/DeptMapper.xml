@@ -9,11 +9,11 @@
 		useGeneratedKeys="true" keyProperty="deptid">
 		insert into
 		t_sys_dept(deptcode,deptname,manager,parent,deptlevel)
-		values(#{deptcode},#{deptname},#{manager},#{parent.deptid},#{deptlevel})
+		values(#{deptcode},#{deptname},#{manager.userid},#{parent.deptid},#{deptlevel})
 	</insert>
 	<update id="updateDept" parameterType="com.infosys.sys.pojo.Dept">
 		update t_sys_dept set
-		deptcode=#{deptcode},deptname=#{deptname},manager=#{manager},parent=#{parent.deptid},deptlevel=#{deptlevel}
+		deptcode=#{deptcode},deptname=#{deptname},manager=#{manager.userid},parent=#{parent.deptid},deptlevel=#{deptlevel}
 		where deptid=#{deptid}
 	</update>
 	<update id="deleteDept" parameterType="integer">
@@ -26,9 +26,11 @@
 		select
 			a.deptid,a.deptcode,a.deptname,a.manager,a.parent,a.deptlevel,
 			b.deptid 'parentdeptid',b.deptcode 'parentdeptcode',
-			b.deptname 'parentdeptname',b.deptlevel 'parentdeptlevel'
+			b.deptname 'parentdeptname',b.deptlevel 'parentdeptlevel',
+			c.userid,c.username
 		from
 			t_sys_dept a left join t_sys_dept b on(a.parent=b.deptid)
+						 left join t_sys_user c on(a.manager=c.userid)
 		where
 			a.delflag=1 and a.deptid=#{deptid}
 	</select>
@@ -36,9 +38,11 @@
 		select
 			a.deptid,a.deptcode,a.deptname,a.manager,a.parent,a.deptlevel,
 			b.deptid 'parentdeptid',b.deptcode 'parentdeptcode',
-			b.deptname 'parentdeptname',b.deptlevel 'parentdeptlevel'
+			b.deptname 'parentdeptname',b.deptlevel 'parentdeptlevel',
+			c.userid,c.username
 		from
 			t_sys_dept a left join t_sys_dept b on(a.parent=b.deptid)
+						 left join t_sys_user c on(a.manager=c.userid)
 		where
 			a.delflag=1
 		<if test="deptname!=null">
@@ -57,6 +61,7 @@
 			count(*)
 		from
 			t_sys_dept a left join t_sys_dept b on(a.parent=b.deptid)
+						 left join t_sys_user c on(a.manager=c.userid)
 		where
 			a.delflag=1
 	</select>
@@ -64,8 +69,11 @@
 		<id column="deptid" property="deptid" />
 		<result column="deptcode" property="deptcode" />
 		<result column="deptname" property="deptname" />
-		<result column="manager" property="manager" />
 		<result column="deptlevel" property="deptlevel" />
+		<association property="manager" javaType="com.infosys.sys.pojo.User">
+			<id column="userid" property="userid" />
+			<result column="username" property="username" />
+		</association>
 		<association property="parent" javaType="com.infosys.sys.pojo.Dept">
 			<id column="parentdeptid" property="deptid" />
 			<result column="parentdeptcode" property="deptcode" />
@@ -92,5 +100,8 @@
 		<foreach collection="array" open="(" close=")" separator="," item="id">
 		#{id}
 		</foreach>
+	</select>
+	<select id="existsDept" parameterType="string" resultType="integer">
+		select count(*) from t_sys_dept where delflag=1 and deptcode=#{deptcode}
 	</select>
 </mapper>

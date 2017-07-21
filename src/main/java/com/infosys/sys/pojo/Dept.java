@@ -12,7 +12,7 @@ public class Dept extends PageBean{
 	private Integer deptid;
 	private String deptcode;
 	private String deptname;
-	private Integer manager;
+	private User manager;
 	private Dept parent;
 	private Integer deptlevel;
 	public Integer getDeptid() {
@@ -33,10 +33,10 @@ public class Dept extends PageBean{
 	public void setDeptname(String deptname) {
 		this.deptname = deptname;
 	}
-	public Integer getManager() {
+	public User getManager() {
 		return manager;
 	}
-	public void setManager(Integer manager) {
+	public void setManager(User manager) {
 		this.manager = manager;
 	}
 	public Dept getParent() {

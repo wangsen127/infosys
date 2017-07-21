@@ -31,4 +31,6 @@ public interface DeptDao {
 	 */
 	public int getParent(Integer[] ids) throws Exception;
 	
+	public int existsDept(String deptcode) throws Exception;
+	
 }

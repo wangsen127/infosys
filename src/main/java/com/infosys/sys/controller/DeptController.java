@@ -74,4 +74,12 @@ public class DeptController {
 		List<TreeNode> list = deptService.deptTree(deptid);
 		return list;
 	}
+	
+	@RequestMapping("/existsDept.do")
+	public @ResponseBody String existsDept(String deptcode) throws Exception{
+		int i = deptService.existsDept(deptcode);
+		if(i==0)
+			return "success";
+		return "failure";
+	}
 }

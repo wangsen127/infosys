@@ -95,4 +95,9 @@ public class DeptServiceImpl implements DeptService{
 			}
 		}
 	}
+
+	@Override
+	public int existsDept(String deptcode) throws Exception {
+		return deptDao.existsDept(deptcode);
+	}
 }

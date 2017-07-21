@@ -21,4 +21,5 @@ public interface DeptService {
 	public Dept getDept(Integer deptid) throws Exception;
 	public Map<String, Object> queryDept(Dept dept) throws Exception;
 	public List<TreeNode> deptTree(Integer deptid) throws Exception;
+	public int existsDept(String deptcode) throws Exception;
 }

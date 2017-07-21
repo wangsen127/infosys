@@ -67,7 +67,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     {field:"plevelid", title: "职务级别", width:10},
                     {field:"sex", title: "性别", width:5, formatter: function(value){
                     	if(value == 1) return "男";
-                    	else if(value == 0) return "女";
+                    	else if(value == 2) return "女";
                     	else return "";
                     }},
                     {field:"birthday", title: "出生日期", width:10},
@@ -221,7 +221,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             <table id="div-table">
                 <tr>
                     <th>用户名：</th>
-                    <td><input class="easyui-textbox" data-options="required:true" name="usercode"/></td>
+                    <td><input id="usercode" class="easyui-textbox" data-options="required:true" name="usercode"/></td>
                     <th>真实姓名：</th>
                     <td><input class="easyui-textbox" data-options="required:true" name="username"/></td>
                 </tr>

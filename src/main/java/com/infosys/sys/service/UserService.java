@@ -19,4 +19,5 @@ public interface UserService {
 	public boolean delUser(Integer[] ids) throws Exception;
 	public User getUser(Integer userid) throws Exception;
 	public Map<String, Object> queryUser(User user) throws Exception;
+	public int existsUser(String usercode) throws Exception;
 }

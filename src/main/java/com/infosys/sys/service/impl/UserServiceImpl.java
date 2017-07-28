@@ -54,4 +54,9 @@ public class UserServiceImpl implements UserService{
 		Integer total = userDao.queryUserCount();
 		return JsonUtil.renderJson(list, total);
 	}
+
+	@Override
+	public int existsUser(String usercode) throws Exception {
+		return userDao.existsUser(usercode);
+	}
 }

@@ -21,4 +21,5 @@ public interface UserDao {
 	public User getUser(Integer userid) throws Exception;
 	public List<User> queryUser(User user) throws Exception;
 	public int queryUserCount() throws Exception;
+	public int existsUser(String usercode) throws Exception;
 }

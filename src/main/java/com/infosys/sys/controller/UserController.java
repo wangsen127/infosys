@@ -70,4 +70,12 @@ public class UserController {
 		Map<String, Object> map = userService.queryUser(user);
 		return map;
 	}
+	
+	@RequestMapping("/existsUser.do")
+	public @ResponseBody String existsUser(String usercode) throws Exception{
+		int i = userService.existsUser(usercode);
+		if(i==0)
+			return "success";
+		return "failure";
+	}
 }

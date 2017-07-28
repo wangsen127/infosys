@@ -61,13 +61,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     {field:"deptcode", title: "部门代码", width:15},
                     {field:"deptname", title: "部门名称", width:20},
                     {field:"manager", title: "部门经理", width:10, formatter: function(value,row,index){
-                    	if(value)
-                    		return value.username;
+                    	if(row.manager)
+                    		return row.manager.username;
                     	return "";
                     }},
                     {field:"parent", title: "父部门", width:20, formatter: function(value,row,index){
-                    	if(value)
-                    		return value.deptname;
+                    	if(row.parent)
+                    		return row.parent.deptname;
                     	return "";
                     }},
                     {field:"deptlevel", title: "部门级别", width:10, formatter: function(value){
@@ -80,7 +80,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 toolbar: "#tb"
   			});
   			
-  			//保存窗口
+  			//窗口
   			$("#div-win").dialog({
   				width:470,    
 			    height:310,
@@ -150,6 +150,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			//验证部门代码是否重复
   			$("#deptcode").textbox("textbox").blur(function(){
   				var deptcode = $("#deptcode").val();
+  				alert(deptcode);
   				if(deptcode){
 	  				$.post("existsDept.do",{deptcode:deptcode},function(data){
 	  					if(data=="success"){
@@ -163,6 +164,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		
   		
   		function save(){
+  			$("#deptcode").textbox("readonly",false);
+			$("#deptcode").textbox("enableValidation");
   			$("#div-win").dialog("open");
   			$("#div-win").dialog("setTitle","新增部门");
   		}
@@ -201,9 +204,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			}else if(ss.length > 1){
   				$.messager.alert("提示","只能选择一条数据");
   			}else{
+  				$("#deptcode").textbox("readonly",true);
+  				$("#deptcode").textbox("disableValidation");
 	  			$("#div-win").dialog("open");
 	  			$("#div-win").dialog("setTitle","修改部门");
-	  			$("#div-form").form("load","getDept.do?deptid="+ss[0].deptid);
+	  			//$("#div-form").form("load","getDept.do?deptid="+ss[0].deptid);
+	  			$("#div-form").form("load",{
+	  				deptid:ss[0].deptid,
+	  				deptcode:ss[0].deptcode,
+	  				deptname:ss[0].deptname,
+	  				deptlevel:ss[0].deptlevel,
+	  				"manager.userid":ss[0].manager==null?"":ss[0].manager.userid,
+	  				"parent.deptid":ss[0].parent==null?"":ss[0].parent.deptid
+	  			});
   			}
   		}
   		function delData(){

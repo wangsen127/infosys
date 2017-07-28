@@ -94,4 +94,7 @@
 			<result column="deptlevel" property="deptlevel" />
 		</association>
 	</resultMap>
+	<select id="existsUser" parameterType="string" resultType="integer">
+		select count(*) from t_sys_user where delflag=1 and usercode=#{usercode}
+	</select>
 </mapper>

@@ -83,11 +83,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                  toolbar: "#tb"
   			});
   			
-  			//保存窗口
+  			//窗口
   			$("#div-win").dialog({
   				width:840,    
 			    height:470,
-			    resizable:true,
+			    //resizable:true,
 			    closed:true,
 			    modal:true,
 			    buttons:[{
@@ -105,11 +105,25 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    	$("#div-form").form("reset");
 			    }
   			});
+  			
+  			//验证用户名是否重复
+  			$("#usercode").textbox("textbox").blur(function(){
+  				var usercode = $("#usercode").val();
+  				if(usercode){
+	  				$.post("existsUser.do",{usercode:usercode},function(data){
+	  					if(data=="success"){
+						}else{
+				        	$.messager.alert("提示","用户名已存在！"); 
+				        }
+	  				});
+  				}
+  			});
   		});
   		function save(){
-  			$("#div-win").window("open");
-  			$("#div-win").window("setTitle","新增用户");
-  			$("#div-form").form("reset");
+  			$("#usercode").textbox("readonly",false);
+			$("#usercode").textbox("enableValidation");
+  			$("#div-win").dialog("open");
+  			$("#div-win").dialog("setTitle","新增用户");
   		}
 		function confirm(){
 			var url = "";
@@ -128,7 +142,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    },    
 			    success:function(data){
 			        if(data=="success"){
-			        	$("#div-win").window("close");
+			        	$("#div-win").dialog("close");
 			        	$("#data").datagrid("reload");
 			        	$("#data").datagrid("clearSelections");
 			        	$.messager.alert("提示","数据"+str+"成功"); 
@@ -146,10 +160,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			}else if(ss.length > 1){
   				$.messager.alert("提示","只能选择一条数据");
   			}else{
-	  			$("#div-win").window("open");
-	  			$("#div-win").window("setTitle","修改用户");
-	  			$("#div-form").form("reset");
-	  			$("#div-form").form("load","getUser.do?userid="+ss[0].userid);
+  				$("#usercode").textbox("readonly",true);
+  				$("#usercode").textbox("disableValidation");
+	  			$("#div-win").dialog("open");
+	  			$("#div-win").dialog("setTitle","修改用户");
+	  			//$("#div-form").form("load","getUser.do?userid="+ss[0].userid);
+	  			$("#div-form").form("load",{
+	  				userid:ss[0].userid,
+	  				usercode:ss[0].usercode,
+	  				username:ss[0].username,
+	  				"dept.deptid":ss[0].dept.deptid,
+	  				email:ss[0].email,
+	  				postid:ss[0].postid,
+	  				plevelid:ss[0].plevelid,
+	  				sex:ss[0].sex,
+	  				birthday:ss[0].birthday,
+	  				cellphone:ss[0].cellphone,
+	  				home_phone:ss[0].home_phone,
+	  				office_phone:ss[0].office_phone,
+	  				address:ss[0].address,
+	  				remark:ss[0].remark
+	  			});
   			}
   		}
   		function delData(){
@@ -218,7 +249,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div id="div-win">
 		<form id="div-form" method="post">
 			<input type="hidden" id="userid" name="userid">
-            <table id="div-table">
+            <table>
                 <tr>
                     <th>用户名：</th>
                     <td><input id="usercode" class="easyui-textbox" data-options="required:true" name="usercode"/></td>

@@ -146,28 +146,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			  		}
   			  	}]
   			});
-  			
-  			//验证部门代码是否重复
-  			$("#deptcode").textbox("textbox").blur(function(){
-  				var deptcode = $("#deptcode").val();
-  				alert(deptcode);
-  				if(deptcode){
-	  				$.post("existsDept.do",{deptcode:deptcode},function(data){
-	  					if(data=="success"){
-						}else{
-				        	$.messager.alert("提示","部门代码已存在！"); 
-				        }
-	  				});
-  				}
-  			});
   		});
-  		
+  		//验证部门代码是否重复
+  		function existsDept(){
+			var deptcode = $("#deptcode").val();
+			alert(deptcode);
+			if(deptcode){
+ 				$.post("existsDept.do",{deptcode:deptcode},function(data){
+ 					if(data=="success"){
+					}else{
+			        	$.messager.alert("提示","部门代码已存在！"); 
+			        }
+ 				});
+			}
+		}
   		
   		function save(){
   			$("#deptcode").textbox("readonly",false);
 			$("#deptcode").textbox("enableValidation");
   			$("#div-win").dialog("open");
   			$("#div-win").dialog("setTitle","新增部门");
+  			$("#deptcode").textbox("textbox").on("blur",existsDept);
   		}
 		function confirm(){
 			var url = "";
@@ -208,6 +207,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   				$("#deptcode").textbox("disableValidation");
 	  			$("#div-win").dialog("open");
 	  			$("#div-win").dialog("setTitle","修改部门");
+	  			$("#deptcode").textbox("textbox").off();
 	  			//$("#div-form").form("load","getDept.do?deptid="+ss[0].deptid);
 	  			$("#div-form").form("load",{
 	  				deptid:ss[0].deptid,

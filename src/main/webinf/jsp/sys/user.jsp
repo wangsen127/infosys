@@ -105,25 +105,25 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    	$("#div-form").form("reset");
 			    }
   			});
-  			
-  			//验证用户名是否重复
-  			$("#usercode").textbox("textbox").blur(function(){
-  				var usercode = $("#usercode").val();
-  				if(usercode){
-	  				$.post("existsUser.do",{usercode:usercode},function(data){
-	  					if(data=="success"){
-						}else{
-				        	$.messager.alert("提示","用户名已存在！"); 
-				        }
-	  				});
-  				}
-  			});
   		});
+		//验证用户名是否重复
+		function existsUser(){
+			var usercode = $("#usercode").val();
+			if(usercode){
+	  			$.post("existsUser.do",{usercode:usercode},function(data){
+	  				if(data=="success"){
+					}else{
+				        $.messager.alert("提示","用户名已存在！"); 
+				    }
+	  			});
+  			}
+  		}
   		function save(){
   			$("#usercode").textbox("readonly",false);
 			$("#usercode").textbox("enableValidation");
   			$("#div-win").dialog("open");
   			$("#div-win").dialog("setTitle","新增用户");
+  			$("#usercode").textbox("textbox").on("blur",existsUser);
   		}
 		function confirm(){
 			var url = "";
@@ -164,6 +164,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   				$("#usercode").textbox("disableValidation");
 	  			$("#div-win").dialog("open");
 	  			$("#div-win").dialog("setTitle","修改用户");
+	  			$("#usercode").textbox("textbox").off();
 	  			//$("#div-form").form("load","getUser.do?userid="+ss[0].userid);
 	  			$("#div-form").form("load",{
 	  				userid:ss[0].userid,
